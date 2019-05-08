@@ -1,4 +1,3 @@
-![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
 
 # Understand Darknet #
 Darknet is an open source neural network framework written in C and CUDA. 
