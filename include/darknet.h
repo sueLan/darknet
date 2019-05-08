@@ -133,18 +133,18 @@ struct layer{
     int nbiases;
     int extra;
     int truths;
-    int h,w,c;
+    int h,w,c; // the input size
     int out_h, out_w, out_c;
-    int n;
+    int n;  // the number of filters
     int max_boxes;
     int groups;
-    int size;
+    int size;   // the size of each filter
     int side;
-    int stride;
+    int stride;  // Stride controls how the filter convolves around the input volume
     int reverse;
     int flatten;
     int spatial;
-    int pad;
+    int pad;    // padding value
     int sqrt;
     int flip;
     int index;
@@ -434,7 +434,7 @@ typedef struct network{
     int *t;
     float epoch;
     int subdivisions;
-    layer *layers;
+    layer *layers; // a array of layers
     float *output;
     learning_rate_policy policy;
 

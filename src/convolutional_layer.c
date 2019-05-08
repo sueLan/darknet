@@ -173,6 +173,24 @@ void cudnn_convolutional_setup(layer *l)
 #endif
 #endif
 
+/**
+ *
+ * @param batch
+ * @param h the height of the input volume
+ * @param w the width of the input volume
+ * @param c the number of channels
+ * @param n the number of filters
+ * @param groups
+ * @param size the width or height of a filter
+ * @param stride the number of stride of a filter
+ * @param padding
+ * @param activation
+ * @param batch_normalize
+ * @param binary
+ * @param xnor
+ * @param adam
+ * @return
+ */
 convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int n, int groups, int size, int stride, int padding, ACTIVATION activation, int batch_normalize, int binary, int xnor, int adam)
 {
     int i;

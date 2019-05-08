@@ -10,13 +10,24 @@
 #include <string.h>
 #include <stdlib.h>
 
+/**
+ *
+ * @param batch
+ * @param w
+ * @param h
+ * @param n the number of Bounding Box for each cell
+ * @param total
+ * @param mask
+ * @param classes the number of classes
+ * @return
+ */
 layer make_yolo_layer(int batch, int w, int h, int n, int total, int *mask, int classes)
 {
     int i;
     layer l = {0};
     l.type = YOLO;
 
-    l.n = n;
+    l.n = n;    // the number of Bounding Box for each cell
     l.total = total;
     l.batch = batch;
     l.h = h;

@@ -563,9 +563,11 @@ void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filenam
 {
     list *options = read_data_cfg(datacfg);
     char *name_list = option_find_str(options, "names", "data/names.list");
+    // labels for class
     char **names = get_labels(name_list);
-
+    // load alphabet images in data/labels/$(row)_$(column).png, which are used to spell label name
     image **alphabet = load_alphabet();
+    // parse configuration and weight file to construct a network
     network *net = load_network(cfgfile, weightfile, 0);
     set_batch_network(net, 1);
     srand(2222222);
