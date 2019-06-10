@@ -1196,30 +1196,49 @@ void saturate_exposure_image(image im, float sat, float exposure)
     constrain_image(im);
 }
 
+/**
+ * Using Linear Interpolation to resize the image
+ * @param im the source image
+ * @param w the width of the destination image
+ * @param h the height of the destination image
+ * @return
+ */
 image resize_image(image im, int w, int h)
 {
     image resized = make_image(w, h, im.c);   
     image part = make_image(w, im.h, im.c);
     int r, c, k;
+    // the ratio of the width of the source image and the width of the destination image
     float w_scale = (float)(im.w - 1) / (w - 1);
+    // the ratio of the height of the source image and the height of the destination image
     float h_scale = (float)(im.h - 1) / (h - 1);
+    // linear interpolation, estimate what the pixel value is for sx  (ix <= sx < ix +1)
+    // resize the width of source image to the height of destination image
     for(k = 0; k < im.c; ++k){
         for(r = 0; r < im.h; ++r){
+            // w is the width of the destination image
             for(c = 0; c < w; ++c){
                 float val = 0;
                 if(c == w-1 || im.w == 1){
                     val = get_pixel(im, im.w-1, r, k);
                 } else {
+                    // map the column index of the source pixel to the column index of the destination pixel
                     float sx = c*w_scale;
                     int ix = (int) sx;
                     float dx = sx - ix;
+                    // Linear interpolation. A straight line through (ix, f(ix)), (ix+1, f(ix+1)) satisfies
+                    // f(x) = f(ix) + [f(ix+1) - f(ix)] / [(ix+1) - ix]; If we set x equal to sx (ix <= sx < ix +1); then
+                    // f(sx) = f(ix) + [f(ix + 1) - f(ix)] / [(ix+1) -ix]
                     val = (1 - dx) * get_pixel(im, ix, r, k) + dx * get_pixel(im, ix+1, r, k);
                 }
                 set_pixel(part, c, r, k, val);
             }
         }
     }
+    // linear interpolation, estimate what the pixel value is for sy (iy <= sy < iy + 1)
+    // resize the height of source image to the height of destination image
     for(k = 0; k < im.c; ++k){
+        // h is the height of the destination image
         for(r = 0; r < h; ++r){
             float sy = r*h_scale;
             int iy = (int) sy;

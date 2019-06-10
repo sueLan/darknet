@@ -178,15 +178,15 @@ void cudnn_convolutional_setup(layer *l)
  * @param batch
  * @param h the height of the input volume
  * @param w the width of the input volume
- * @param c the number of channels
+ * @param c the number of input channels
  * @param n the number of filters
  * @param groups
  * @param size the width or height of a filter
  * @param stride the number of stride of a filter
- * @param padding
- * @param activation
- * @param batch_normalize
- * @param binary
+ * @param padding the number of padding 0
+ * @param activation the type of activation func
+ * @param batch_normalize BN option
+ * @param binary binarize weights option
  * @param xnor
  * @param adam
  * @return
@@ -200,7 +200,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     l.groups = groups;
     l.h = h;
     l.w = w;
-    l.c = c;
+    l.c = c;    // The number of input channel equal to the number of channel of a filter in this layer.
     l.n = n;
     l.binary = binary;
     l.xnor = xnor;
@@ -225,6 +225,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     //scale = .02;
     //for(i = 0; i < c*n*size*size; ++i) l.weights[i] = scale*rand_uniform(-1, 1);
     for(i = 0; i < l.nweights; ++i) l.weights[i] = scale*rand_normal();
+    // the size of the output volume
     int out_w = convolutional_out_width(l);
     int out_h = convolutional_out_height(l);
     l.out_h = out_h;
@@ -239,6 +240,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
     l.forward = forward_convolutional_layer;
     l.backward = backward_convolutional_layer;
     l.update = update_convolutional_layer;
+    // binarize the weights (float array)
     if(binary){
         l.binary_weights = calloc(l.nweights, sizeof(float));
         l.cweights = calloc(l.nweights, sizeof(char));
@@ -249,6 +251,7 @@ convolutional_layer make_convolutional_layer(int batch, int h, int w, int c, int
         l.binary_input = calloc(l.inputs*l.batch, sizeof(float));
     }
 
+    // batch normaliza
     if(batch_normalize){
         l.scales = calloc(n, sizeof(float));
         l.scale_updates = calloc(n, sizeof(float));

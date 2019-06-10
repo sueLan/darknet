@@ -585,15 +585,19 @@ void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filenam
             if(!input) return;
             strtok(input, "\n");
         }
+        // load image
         image im = load_image_color(input,0,0);
+        // resize the image to fit the the network input size
         image sized = letterbox_image(im, net->w, net->h);
         //image sized = resize_image(im, net->w, net->h);
         //image sized2 = resize_max(im, net->w);
         //image sized = crop_image(sized2, -((net->w - sized2.w)/2), -((net->h - sized2.h)/2), net->w, net->h);
         //resize_network(net, sized.w, sized.h);
+
+        // the last layer in the net
         layer l = net->layers[net->n-1];
 
-
+        // the input volume
         float *X = sized.data;
         time=what_time_is_it_now();
         network_predict(net, X);

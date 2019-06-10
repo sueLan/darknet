@@ -126,25 +126,25 @@ struct layer{
     int shortcut;
     int batch;
     int forced;
-    int flipped;
-    int inputs;
-    int outputs;
-    int nweights;
-    int nbiases;
+    int flipped;        // the weight should be transposed
+    int inputs;         // inputs = l.w * l.h * l.c
+    int outputs;        // outputs = l.out_h * l.out_w * l.out_c
+    int nweights;       // num of weights
+    int nbiases;        // num of biases
     int extra;
     int truths;
-    int h,w,c; // the input size
+    int h,w,c;          // the input size
     int out_h, out_w, out_c;
-    int n;  // the number of filters
+    int n;              // the number of filters
     int max_boxes;
-    int groups;
-    int size;   // the size of each filter
+    int groups;         // default value is 1
+    int size;           // the size of each filter
     int side;
-    int stride;  // Stride controls how the filter convolves around the input volume
+    int stride;         // stride controls how the filter convolves around the input volume
     int reverse;
     int flatten;
     int spatial;
-    int pad;    // padding value
+    int pad;
     int sqrt;
     int flip;
     int index;
@@ -198,7 +198,7 @@ struct layer{
 
     int onlyforward;
     int stopbackward;
-    int dontload;
+    int dontload;        // This layer doesn't need to load weights
     int dontsave;
     int dontloadscales;
     int numload;
@@ -235,7 +235,7 @@ struct layer{
     float * scales;
     float * scale_updates;
 
-    float * weights;
+    float * weights;        // c/groups*n*size*size
     float * weight_updates;
 
     float * delta;
@@ -428,7 +428,7 @@ typedef enum {
 } learning_rate_policy;
 
 typedef struct network{
-    int n;
+    int n; // the number of layer in the net
     int batch;
     size_t *seen;
     int *t;

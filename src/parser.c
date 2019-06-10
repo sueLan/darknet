@@ -178,24 +178,31 @@ layer parse_deconvolutional(list *options, size_params params)
 
 convolutional_layer parse_convolutional(list *options, size_params params)
 {
+    // the number of filter configured in cfg file, the default value is 1
     int n = option_find_int(options, "filters",1);
+    // the size of a single filter
     int size = option_find_int(options, "size",1);
+    // the stride of a filter
     int stride = option_find_int(options, "stride",1);
+    // 1: enable padding; 0: no padding
     int pad = option_find_int_quiet(options, "pad",0);
     int padding = option_find_int_quiet(options, "padding",0);
     int groups = option_find_int_quiet(options, "groups", 1);
     if(pad) padding = size/2;
 
+    // the type of the activation layer
     char *activation_s = option_find_str(options, "activation", "logistic");
     ACTIVATION activation = get_activation(activation_s);
 
     int batch,h,w,c;
-    h = params.h;
-    w = params.w;
-    c = params.c;
+    h = params.h;   // the height of the input volume
+    w = params.w;   // the width of the input volume
+    c = params.c;   // the number of channels of the input volume
     batch=params.batch;
     if(!(h && w && c)) error("Layer before convolutional layer must output image.");
+    // batch_normalization option; 1: enable batch_normalization; the default value is 0
     int batch_normalize = option_find_int_quiet(options, "batch_normalize", 0);
+    // weight binaryzation option;
     int binary = option_find_int_quiet(options, "binary", 0);
     int xnor = option_find_int_quiet(options, "xnor", 0);
 
@@ -900,6 +907,7 @@ list *read_cfg(char *filename)
         ++ nu;
         strip(line);
         switch(line[0]){
+            // '[' is a tag for a section, the type of current setion is '[net]'
             case '[':
                 current = malloc(sizeof(section));
                 list_insert(options, current);
@@ -1168,7 +1176,10 @@ void load_convolutional_weights(layer l, FILE *fp)
         //return;
     }
     if(l.numload) l.n = l.numload;
+    // the numbers of param for all filters in this layer
+    // the number of input channel equals to the number of the filter channel
     int num = l.c/l.groups*l.n*l.size*l.size;
+    // load biases weights for filters
     fread(l.biases, sizeof(float), l.n, fp);
     if (l.batch_normalize && (!l.dontloadscales)){
         fread(l.scales, sizeof(float), l.n, fp);
@@ -1201,6 +1212,7 @@ void load_convolutional_weights(layer l, FILE *fp)
             printf("\n");
         }
     }
+    // the weights for filter
     fread(l.weights, sizeof(float), num, fp);
     //if(l.c == 3) scal_cpu(num, 1./256, l.weights, 1);
     if (l.flipped) {
@@ -1243,6 +1255,7 @@ void load_weights_upto(network *net, char *filename, int start, int cutoff)
     int transpose = (major > 1000) || (minor > 1000);
 
     int i;
+    // Begin load weights for layers
     for(i = start; i < net->n && i < cutoff; ++i){
         layer l = net->layers[i];
         if (l.dontload) continue;
