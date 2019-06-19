@@ -47,7 +47,7 @@ image load_image_stb(char *filename, int channels)
 
 ### Bilinear Interpolation
 
-As for resizing the input image, we should talk something about Bilinear Interpolation.
+The desired input volume of the network is 416 x 416 x 3. But images in the dataset are usually not 416 x 416 x3. So we should resize the image to fit the YOLO nerual network. As for resizing the input image, we should talk something about Bilinear Interpolation.
 
 ```c++
 /**
