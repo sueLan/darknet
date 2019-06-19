@@ -1197,7 +1197,7 @@ void saturate_exposure_image(image im, float sat, float exposure)
 }
 
 /**
- * Using Linear Interpolation to resize the image
+ * Using Bilinear Interpolation to resize the image
  * @param im the source image
  * @param w the width of the destination image
  * @param h the height of the destination image
@@ -1213,16 +1213,16 @@ image resize_image(image im, int w, int h)
     // the ratio of the height of the source image and the height of the destination image
     float h_scale = (float)(im.h - 1) / (h - 1);
     // linear interpolation, estimate what the pixel value is for sx  (ix <= sx < ix +1)
-    // resize the width of source image to the height of destination image
+    // resize the width of source image to the width of desired image
     for(k = 0; k < im.c; ++k){
         for(r = 0; r < im.h; ++r){
-            // w is the width of the destination image
+            // w is the width of the desired image, c is the index of the pixel in the desired image
             for(c = 0; c < w; ++c){
                 float val = 0;
                 if(c == w-1 || im.w == 1){
                     val = get_pixel(im, im.w-1, r, k);
                 } else {
-                    // map the column index of the source pixel to the column index of the destination pixel
+                    // get the index  for the source image related to the index c for a desired image
                     float sx = c*w_scale;
                     int ix = (int) sx;
                     float dx = sx - ix;
@@ -1236,9 +1236,9 @@ image resize_image(image im, int w, int h)
         }
     }
     // linear interpolation, estimate what the pixel value is for sy (iy <= sy < iy + 1)
-    // resize the height of source image to the height of destination image
+    // resize the height of source image to the height of desired image
     for(k = 0; k < im.c; ++k){
-        // h is the height of the destination image
+        // h is the height of the desired image
         for(r = 0; r < h; ++r){
             float sy = r*h_scale;
             int iy = (int) sy;
