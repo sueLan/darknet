@@ -13,11 +13,11 @@ When you run this command, it does these things:
 6. use non-maximum suppression algorithm to choose best box
 
 
-### load image 
+### Load image 
 
 In the step 4, it rearranges the image data by transforming the 3 dimensions input volume into an array. 
 
-![bb6eb877.png](:storage/./attachments/bb6eb877.png)
+![bb6eb877.png](./attachments/bb6eb877.png)
 ```c++
 image load_image_stb(char *filename, int channels)
 {
