@@ -8,4 +8,4 @@ For more information see the [Darknet project website](http://pjreddie.com/darkn
 
 - [The Architecture of YOLO-Tiny Neural Network](https://suelan.github.io/2019/05/08/The-Implementation-of-Convolutional-and-MaxPool-layer/)
 - [The Weights of the YOLO Neural Network](https://suelan.github.io/2019/05/12/The-Weights-of-the-YOLO-Neural-Network/)
-
+- [How to resize the input image](https://github.com/sueLan/understand-darknet/blob/master/doc/HowToResizeImage.md)
